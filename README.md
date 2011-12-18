@@ -5,14 +5,14 @@ servethis
 Installation
 ------------
 
-		gem install servethis
+	gem install servethis
 
 
 Usage
 -----
 
-		servethis
-
+	servethis
+	
 or
 
-		servethis . -p 8000
+	servethis . -p 8000
