@@ -1,10 +1,14 @@
 require "servethis/version"
 require "webrick"
 require "optparse"
+require "servethis/noncachingfilehandler"
 
 options = {
   :Port => 8000,
-  :DocumentRoot => "."
+  :DocumentRoot => ".",
+  :ServerSoftware => "WEBrick/#{WEBrick::VERSION} " +
+                         "(Ruby/#{RUBY_VERSION}/#{RUBY_RELEASE_DATE}) " +
+                         "servethis/#{Servethis::VERSION}",
 }
 
 OptionParser.new do |opts|
@@ -17,6 +21,10 @@ end.parse!
 
 options[:DocumentRoot] = ARGV[0] if ARGV[0]
 
+document_root = options[:DocumentRoot]
+options.delete(:DocumentRoot)
+
 server = WEBrick::HTTPServer.new( options )
+server.mount("/", NonCachingFileHandler, document_root, server.config[:DocumentRootOptions])
 trap("INT") { server.shutdown }
 server.start
